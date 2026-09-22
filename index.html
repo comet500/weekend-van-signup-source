@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="메인센터행 스타렉스 탑승 신청과 좌석 현황을 관리하는 웹앱" />
+    <title>메인센터 가는 스타렉스 신청</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <span class="logo" aria-hidden="true">🚐</span>
+        <strong>메인센터 가는 스타렉스 신청</strong>
+      </div>
+    </header>
+
+    <main class="page-shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <span class="capacity-pill">상·하행 각 11자리</span>
+          <h1>함께 가는 사람을<br />한눈에 확인하세요.</h1>
+        </div>
+
+        <div>
+          <section class="schedule-card" aria-labelledby="schedule-title">
+            <div class="schedule-heading">
+              <div>
+                <p class="eyebrow" id="schedule-title">운행 시간</p>
+                <p class="weekday"><span aria-hidden="true">📅</span> <span id="schedule-weekday">토요일</span></p>
+              </div>
+              <button class="small-button" id="open-schedule" type="button">✎ 시간 수정</button>
+            </div>
+            <div class="time-line">
+              <div><span>도량센터 출발</span><strong id="doryang-time">08:00</strong></div>
+              <b aria-hidden="true">→</b>
+              <div><span>김천IC 출발</span><strong id="ic-time">08:25</strong></div>
+              <b aria-hidden="true">→</b>
+              <div><span>메인센터 도착</span><strong id="arrival-time">10:00</strong></div>
+            </div>
+          </section>
+
+          <div class="seat-grid">
+            <div class="seat-card"><span aria-hidden="true">↑</span><p>상행 남은 자리</p><strong><span id="up-remaining">11</span><small>자리</small></strong></div>
+            <div class="seat-card"><span aria-hidden="true">↓</span><p>하행 남은 자리</p><strong><span id="down-remaining">11</span><small>자리</small></strong></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="content-grid">
+        <section class="signup-card">
+          <p class="eyebrow">탑승 신청</p>
+          <h2>어떻게 이용하시나요?</h2>
+          <form id="signup-form">
+            <label class="field-label" for="applicant-name">신청자 이름</label>
+            <input class="field" id="applicant-name" name="name" maxlength="40" autocomplete="name" placeholder="이름을 입력하세요" required />
+
+            <div id="companions" class="companions"></div>
+            <button class="text-button" id="add-companion" type="button">＋ 다른 사람도 함께 신청하기</button>
+
+            <fieldset>
+              <legend>출발지</legend>
+              <div class="two-options">
+                <label class="option"><input type="radio" name="departure" value="doryang" checked /> <span>도량센터</span></label>
+                <label class="option"><input type="radio" name="departure" value="gimcheon_ic" /> <span>김천IC</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>이용 구간</legend>
+              <div class="ride-options">
+                <label class="option ride"><input type="radio" name="ride" value="up" /><span><b>↑ 상행 편도</b><small>메인센터 갈 때만</small></span></label>
+                <label class="option ride"><input type="radio" name="ride" value="down" /><span><b>↓ 하행 편도</b><small>돌아올 때만</small></span></label>
+                <label class="option ride"><input type="radio" name="ride" value="round" checked /><span><b>↕ 왕복</b><small>갈 때와 돌아올 때 모두</small></span></label>
+              </div>
+            </fieldset>
+
+            <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+            <button class="submit-button" id="submit-button" type="submit">신청하기 →</button>
+          </form>
+        </section>
+
+        <section class="applications" aria-labelledby="applications-title">
+          <div class="list-heading">
+            <div><p class="eyebrow">현재 신청</p><h2 id="applications-title">누가 함께 가나요?</h2></div>
+            <span class="count-pill">👥 <span id="total-count">0</span>명</span>
+          </div>
+          <p class="privacy-note">입력한 이름은 이 브라우저에만 저장됩니다.</p>
+          <div class="departure-grid">
+            <section class="departure-group">
+              <header><div><h3>도량센터</h3><p>출발 <span id="doryang-list-time">08:00</span></p></div><span><span id="doryang-count">0</span>명</span></header>
+              <div class="name-list" id="doryang-list"></div>
+            </section>
+            <section class="departure-group">
+              <header><div><h3>김천IC</h3><p>출발 <span id="ic-list-time">08:25</span></p></div><span><span id="ic-count">0</span>명</span></header>
+              <div class="name-list" id="ic-list"></div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <dialog id="schedule-dialog">
+      <form id="schedule-form" method="dialog">
+        <div class="dialog-heading"><div><h2>운행 시간 수정</h2><p>요일과 도량센터 출발 시간을 입력하세요.</p></div><button class="close-button" id="close-schedule" type="button" aria-label="닫기">×</button></div>
+        <label class="field-label" for="weekday-input">출발 요일</label>
+        <select class="field" id="weekday-input">
+          <option>월요일</option><option>화요일</option><option>수요일</option><option>목요일</option><option>금요일</option><option selected>토요일</option><option>일요일</option>
+        </select>
+        <label class="field-label" for="departure-time-input">도량센터 출발 시간</label>
+        <input class="field" id="departure-time-input" type="time" value="08:00" required />
+        <p class="calculation-note">김천IC는 25분 뒤, 메인센터 도착은 2시간 뒤로 자동 계산됩니다.</p>
+        <button class="submit-button" value="default">저장하기</button>
+      </form>
+    </dialog>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+# 운영체제와 편집기가 만드는 임시 파일
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# 개발 도구가 만드는 파일
+_original-site-backup/
+node_modules/
+dist/
+build/
+.next/
+.wrangler/
+.sites-runtime/
+*.log
+
+# 로컬 환경 설정과 비밀값
+.env
+.env.*
+!.env.example
